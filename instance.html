@@ -1,0 +1,80 @@
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<div id="app-1">
+	{{a}}
+</div>
+
+<div id="app-2">
+	<p>{{obj.foo}}</p>
+	<button @click="obj.foo='baz'">Change it</button>
+</div>
+
+<div id="example">
+	{{a}}
+</div>
+
+<div id="lifecycle">
+	{{a}}
+</div>
+
+<script type="text/javascript">
+	var data = {a: 5}
+	var app1 = new Vue({
+		el: '#app-1',
+		data: data
+	});
+	
+	console.log(data.a == app1.a)
+	app1.a = 2
+	console.log(data.a)
+	
+	var obj = {
+		foo:'bar'
+	}
+	Object.freeze(obj)
+	var app2 = new Vue({
+		el: '#app-2',
+		data() {
+			return {
+				obj
+			}
+		}
+	});
+	
+	var vm = new Vue({
+		el: '#example',
+		data: {
+			a: 8
+		}
+	});
+	
+	vm.$watch('a', function(newValue, oldValue){
+		console.log(newValue);
+		console.log(oldValue);
+	});
+	
+	var lc = new Vue({
+		el: '#lifecycle',
+		data: {
+			a: 1,
+		},
+		created: function() {
+			console.log('a is: ' + this.a);
+		},
+		beforeMount: function(){
+		console.log('this is a beforeMount!');
+		},
+		mounted: function() {
+			console.log('this is a mounted!');
+		},
+		beforeUpdate: function() {
+			console.log('this is a beforeUpdated!');
+		},
+		updated: function() {
+			console.log('this is a updated!');
+		},
+		beforeDestroy: function() {
+			console.log('this is a destroyed!');//输不出数据
+		}
+	});
+	lc.a = 5;
+</script>
