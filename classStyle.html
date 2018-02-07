@@ -1,0 +1,59 @@
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<div id="app-1">
+	<div v-bind:class="{ active:isActive, 'text-danger': hasError }"></div>
+	<div v-bind:class="classObject"></div>
+	<div v-bind:class="classObj"></div>
+</div>
+
+<div id="app-2">
+	<div v-bind:class="[isActive ? activeClass : '', errorClass]"></div>
+	<div v-bind:class="[{active:isActive}, errorClass]"></div>
+</div>
+
+<div id="app-3">
+	<my-component class="baz boo"></my-component>
+	<my-component v-bind:class="{ active: isActive }"></my-component>
+</div>
+
+<script type="text/javascript">
+var app1 = new Vue({
+	el: '#app-1',
+	data: {
+		isActive:true,
+		hasError:false,
+		classObject: {
+			'active': false,
+			'text-danger': true
+		},
+		isShow:true
+	},
+	computed: {
+		classObj: function() {
+			return {
+				'tabc': this.isShow,
+				'text-danger': this.isShow
+			}
+		}
+	}
+});
+
+var app2 = new Vue({
+	el: '#app-2',
+	data: {
+		activeClass: 'bbs',
+		errorClass: 'your-error',
+		isActive: true,
+	}
+});
+
+Vue.component('my-component', {
+  template: '<p class="foo bar">Hi</p>'
+})
+
+var app3 = new Vue({
+	el: '#app-3',
+	data: {
+		isActive:true
+	}
+});
+</script>
