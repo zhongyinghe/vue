@@ -7,3 +7,8 @@
 * 6 [条件渲染](ifShow.html)
 * 7 [列表渲染](vfor.html)
 * 8 [事件处理](event.html)
+
+
+### 附件理解
+* A [实例到条件渲染的理解](understand.md)
+* B [列表渲染到表单input绑定理解](understand2.md)
