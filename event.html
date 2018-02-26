@@ -1,0 +1,106 @@
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<div id="app1">
+	<button v-on:click="counter += 1">增加 1</button>
+	<p>上面的按钮被点击了{{counter}}次</p>
+</div>
+
+<div id="app2">
+	<button v-on:click="greet">Greet</button>
+</div>
+
+<div id="app3">
+	<button v-on:click="say('hi')">Say hi</button>
+	<button v-on:click="say('what')">Say what</button>
+</div>
+
+<div id="app4">
+	<button v-on:click="warn('Form cannot be submitted yet.', $event)">Submit</button>
+</div>
+
+<div id="app5">
+	<a href="http://www.baidu.com" v-on:click.prevent="doThis">点击去百度</a>
+	<a href="#" v-on:click.once="doThat">点击去哪里</a>
+</div>
+
+<div id="app6">
+	<input type="text" value="" v-on:keyup.enter="go">
+</div>
+
+<div id="app7">
+	<input type="text" value="" v-on:keyup.alt.67="downsome">
+</div>
+
+<script type="text/javascript">
+	var app1 = new Vue({
+		el: "#app1",
+		data: {
+			counter: 0
+		}
+	});
+	
+	var app2 = new Vue({
+		el: '#app2',
+		data: {
+			name: 'Vue.js'
+		},
+		methods: {
+			greet: function(event) {
+				alert('Hello ' + this.name + '!');
+				if(event) {
+					alert(event.target.tagName);
+				}
+			}
+		}
+	});
+	
+	var app3 = new Vue({
+		el: '#app3',
+		methods: {
+			say: function(message) {
+				alert(message);
+			}
+		}
+	});
+	
+	var app4 = new Vue({
+		el: '#app4',
+		methods: {
+			warn: function(message, event) {
+				if (event) {
+					event.preventDefault();
+				}
+				alert(message);
+			}
+		}
+	});
+	
+	var app5 = new Vue({
+		el: '#app5',
+		methods: {
+			doThis: function() {
+				alert('hello this');
+			},
+			doThat: function() {
+				alert('this is that');
+			}
+		}
+	});
+	
+	var app6 = new Vue({
+		el: '#app6',
+		methods: {
+			go: function() {
+				alert('enter input');
+			}
+		}
+	});
+	
+	var app7 = new Vue({
+		el: '#app7',
+		methods: {
+			downsome: function() {
+				alert('press alt');
+			}
+		}
+	});
+</script>
