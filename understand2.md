@@ -35,3 +35,18 @@ v-for遍历对象:value、key、index
 
 5、系统辅助按键 => ctrl、shift、alt
                => .exact表明要精确按键
+
+### 三、表单input绑定
+1、基础用法
+```
+数据绑定 => value双向绑定在v-model中的xxx,而xxx是data{}中的值;
+```
+
+2、与value属性绑定
+```
+v-bind:value="xxx";而xxx是data的变量
+```
+3、修饰符
+```
+v-model.修饰符 能够对v-model的内容进行控制
+```
