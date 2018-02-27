@@ -1,0 +1,156 @@
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<div id="app1">
+	<input v-model="message" placeholder="编辑">
+	<p>message 是: {{message}}</p>
+	
+	<span>多行 msg 是：</span>
+	<p style="white-space: pre-line;">{{ msg }}</p>
+	<br>
+	<textarea v-model="msg" placeholder="添加多行"></textarea>
+	
+	<br>
+	
+	<input type="checkbox" id="checkbox" v-model="checked">
+	<label for="checkbox">{{ checked }}</label>
+	
+	<div>
+		<input type="checkbox" id="jack" value="Jack" v-model="checkedNames">
+		<label for="jack">Jack</label>
+		<input type="checkbox" id="john" value="John" v-model="checkedNames">
+		<label for="john">John</label>
+		<input type="checkbox" id="mike" value="Mike" v-model="checkedNames">
+		<label for="mike">Mike</label>
+		<br>
+		<span>勾选的名字是：{{ checkedNames }}</span>
+	</div>
+	
+	<div>
+		<input type="radio" id="one" value="One" v-model="picked">
+		<label for="one">One</label>
+		<br>
+		<input type="radio" id="two" value="Two" v-model="picked">
+		<label for="two">Two</label>
+		<br>
+		<span>选中的是：{{ picked }}</span>
+	</div>
+	
+	<div>
+		<select v-model="selected">
+			<option disabled value="">请选择其中一项</option>
+			<option>A</option>
+			<option>B</option>
+			<option>C</option>
+		</select>
+		<span>选中的是：{{ selected }}</span>
+	</div>
+	
+	<div>
+		<select v-model="selected2" multiple>
+			<option>A</option>
+			<option>B</option>
+			<option>C</option>
+		</select>
+		<br>
+		<span>选中的是：{{ selected2 }}</span>
+	</div>
+	
+	<div>
+		<select v-model="selected3">
+			<option v-for="option in options" v-bind:value="option.value">
+			{{ option.text }}
+			</option>
+		</select>
+		<span>选中的是：{{ selected3 }}</span>
+	</div>
+</div>
+<br>
+-------------------------------------------------
+<br>
+<div id="app2">
+	<input
+	  type="checkbox"
+	  v-model="toggle"
+	  true-value="yes"
+	  false-value="no"
+	>
+	<br>
+	<span>toggle的值为: {{toggle}}</span>
+	<div>
+		<input type="radio" v-model="pick" v-bind:value="a">
+		<input type="radio" v-model="pick" v-bind:value="b">
+		<br>
+		<span>pick的值为: {{pick}}</span>
+	</div>
+	
+	<div>
+		<select v-model="selected">
+			<option v-bind:value="abe">123</option>
+		</select>
+	</div>
+</div>
+
+<br>
+-------------------------------------------------
+<br>
+
+<div id="app3">
+	<div>
+		<input v-model.lazy="msg">
+		<br>
+		<span>msg的值为: {{msg}}</span>
+	</div>
+	<br>
+	<div>
+		<input v-model.number="age" type="number">
+		<br>
+		<span>age的值为: {{age}}</span>
+	</div>
+	<br>
+	<div>
+		<input v-model.trim="txt">
+		<br>
+		<span>txt的值为: {{txt}}</span>
+	</div>
+</div>
+
+<script type="text/javascript">
+	var app1 = new Vue({
+		el: '#app1',
+		data: {
+			message: '',
+			msg: '',
+			checked: false,
+			checkedNames: [],
+			picked: '',
+			selected: '',
+			selected2: [],
+			selected3: 'B',
+			options: [
+				{ text: 'One', value: 'A' },
+				{ text: 'Two', value: 'B' },
+				{ text: 'Three', value: 'C' }
+			],
+		}
+	});
+	
+	var app2 = new Vue({
+		el: '#app2',
+		data: {
+			toggle: '',
+			pick: '',
+			a: 'abc',
+			b: 'cde',
+			selected: '',
+			abe: '852',
+		}
+	});
+	
+	var app3 = new Vue({
+		el: '#app3',
+		data: {
+			msg: '',
+			age: '',
+			txt: '',
+		}
+	});
+</script>
