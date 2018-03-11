@@ -1,0 +1,118 @@
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<div id="app1">
+	<h1>我是父组件的标题</h1>
+	<my-component>
+		<p>这是一些初始内容</p>
+		<p>这是更多的初始内容</p>
+	</my-component>
+</div>
+
+<!--具名slot-->
+<div id="app2">
+	<app-layout>
+		<h1 slot="header">这里可能是一个页面标题</h1>
+		<p>主要内容的一个段落。</p>
+		<p>另一个主要段落。</p>
+		<p slot="footer">这里是一些联系信息</p>
+	</app-layout>
+</div>
+
+<!--作用域插槽-->
+<div id="app3">
+	<div class="parent">
+		<my-child>
+			<template slot-scope="props">
+				<span>hello from parent</span>
+				<span>{{props.text}}</span>
+			</template>
+		</my-child>
+	</div>
+</div>
+
+<!--作用域插槽2-->
+<div id="app4">
+	<my-awesome-list :items="items">
+		<li 
+			slot="item"
+			slot-scope="props"
+			class="my-fancy-item">
+			{{props.text}}
+		</li>
+	</my-awesome-list>
+</div>
+
+<script type="text/javascript">
+	Vue.component('my-component',{
+		template: `
+			<div>
+				<h2>我是子组件的标题</h2>
+				<slot>
+					只有在没有要分发的内容时才会显示。
+				</slot>
+			</div>
+		`
+	});
+	
+	var app1 = new Vue({
+		el: '#app1'
+	});
+	
+	//具名slot
+	Vue.component('app-layout', {
+		template: `
+			<div class="container">
+				<header>
+					<slot name="header"></slot>
+				</header>
+				<main>
+					<slot></slot>
+				</main>
+				<footer>
+					<slot name="footer"></slot>
+				</footer>
+			</div>
+		`
+	});
+	var app2 = new Vue({
+		el: '#app2'
+	});
+	
+	//作用域插槽
+	
+	Vue.component('my-child', {
+		template:`
+			<div class="child">
+				<slot text="hello from child"></slot>
+			</div>
+		`
+	});
+	
+	var app3 = new Vue({
+		el: '#app3'
+	});
+	
+	//作用域插槽2
+	Vue.component('my-awesome-list', {
+		props: ["items"],
+		template:`
+			<ul>
+				<slot
+					name="item"
+					v-for="item in items"
+					:text="item.text">
+				</slot>
+			</ul>
+		`
+	});
+	
+	var app4 = new Vue({
+		el: '#app4',
+		data: {
+			items: [
+				{id: 1, text: '桃子'},
+				{id: 2, text: '葡萄'},
+				{id: 3, text: '柚子'},
+			]
+		}
+	});
+</script>
