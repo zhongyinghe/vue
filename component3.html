@@ -1,0 +1,145 @@
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<!--v-on自定义事件-->
+<div id="app1">
+	<p>{{total}}</p>
+	<button-counter v-on:increment="incrementTotal"></button-counter>
+	<button-counter v-on:increment="incrementTotal"></button-counter>
+</div>
+
+<!--为组件绑定原生事件-->
+<div id="app2">
+	<my-pt v-on:click.native="doSomeThing"></my-pt>
+</div>
+
+<!--自定义事件表单输入组件-->
+<div id="app3">
+	<currency-input v-model="price"></currency-input>
+</div>
+
+<!--定制组件v-model-->
+<div id="app4">
+	<my-checkbox v-model="foo"></my-checkbox>
+</div>
+
+<!--非父子组件通信-->
+<div id="app5">
+    <c1></c1>
+    <c2></c2>
+</div>
+
+<script type="text/javascript">
+	//v-on自定义事件
+	Vue.component('button-counter', {
+		template: '<button v-on:click="incrementCounter">{{counter}}</button>',
+		data: function() {
+			return {
+				counter: 0
+			}
+		},
+		methods: {
+			incrementCounter: function() {
+				this.counter += 1;
+				this.$emit('increment');
+			}
+		}
+	});
+	
+	var app1 = new Vue({
+		el: '#app1',
+		data: {
+			total: 0
+		},
+		methods: {
+			incrementTotal: function() {
+				this.total += 1;
+			}
+		}
+	});
+	
+	//为组件绑定原生事件
+	Vue.component('my-pt', {
+		template: '<button>abc</button>'
+	});
+	
+	var app2 = new Vue({
+		el: '#app2',
+		methods: {
+			doSomeThing: function() {
+				alert('123654');
+			}
+		}
+	});
+	
+	//自定义事件表单输入组件
+	Vue.component('currency-input', {
+		template:'\
+			<span>\
+			$\
+			<input\
+				ref="input"\
+				v-bind:value="value"\
+				v-on:input="updateValue($event.target.value)">\
+			</span>\
+		',
+		props: ["value"],
+		methods: {
+			updateValue: function(value) {
+				var formattedValue = value.trim().slice(0, value.indexOf(".") === -1 ? value.length : value.indexOf(".") + 3);
+				if (formattedValue !== value) {
+					this.$refs.input.value = formattedValue;
+				}
+				
+				this.$emit('input', Number(formattedValue));
+			}
+		}
+	});
+	
+	var app3 = new Vue({
+		el: '#app3',
+		data: {
+			price: 0
+		}
+	});
+	
+	//定制组件v-model
+	Vue.component('my-checkbox', {
+		model: {
+			prop: 'checked',
+			event: 'balabala'
+		},
+		props:["checked","value"],
+		template: `<input type="checkbox" v-bind:checked="value" v-on:change="$emit('balabala', $event.target.checked)">`
+	});
+	
+	var app4 = new Vue({
+		el: '#app4',
+		data: {
+			foo: false
+		}
+	});
+	
+	//非父子组件通信
+	var Bus = new Vue();
+	Vue.component('c1',{
+	  template:'<div>{{msg}}</div>',
+	  data: () => ({
+		msg: 'Hello World!'
+	  }),
+	  created() {
+		Bus.$on('setMsg', content => {
+		  this.msg = content;
+		});
+	  }
+	});
+	Vue.component('c2',{
+	  template: '<button @click="sendEvent">Say Hi</button>',
+	  methods: {
+		sendEvent() {
+		  Bus.$emit('setMsg', 'Hi Vue!');
+		}
+	  }
+	});
+	var app= new Vue({
+		el:'#app5'
+	})
+</script>
