@@ -1,0 +1,135 @@
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<div id="app1">
+	<child message="msg"></child>
+</div>
+
+<div id="app2">
+	<!--必须是my-message,而myMessage是不行的-->
+	<my-child v-bind:my-message="msg"></my-child>
+</div>
+
+<div id="app3">
+	<input v-model="parentMsg">
+	<br>
+	<my-ch v-bind:my-msg="parentMsg"></my-ch>
+</div>
+
+<div id="app4">
+	<todo-item v-bind="todo"></todo-item>
+</div>
+
+<div id="app5">
+	<!--加v-bind输出的是8,不加v-bind输出的是1*8-->
+	<comp v-bind:some-prop="1*8"></comp>
+</div>
+
+<div id="app6">
+	<my-exp
+		v-bind:num="nums"
+		v-bind:username="userName"
+		v-bind:msgObj="mymsg">
+	</my-exp>
+</div>
+
+<div id="app7">
+	<bs-date-input
+		data-3d-date-picker="true"
+		class="date-picker-theme-dark">
+	</bs-date-input>
+</div>
+
+<script type="text/javascript">
+	Vue.component('child', {
+		props: ['message'],
+		template: '<span>{{message}}</span>'
+	});
+	
+	var app1 = new Vue({
+		el: '#app1'
+	});
+	
+	Vue.component('my-child', {
+		props: ['myMessage'],
+		template: '<span>{{myMessage}}</span>'
+	});
+	
+	var app2 = new Vue({
+		el: '#app2',
+		data: {
+			msg: 'hello, world'
+		}
+	});
+	
+	Vue.component('my-ch', {
+		props: ["myMsg"],
+		template: '<span>{{myMsg}}</span>'
+	});
+	
+	var app3 = new Vue({
+		el: '#app3',
+		data: {
+			parentMsg: ''
+		}
+	});
+	
+	Vue.component('todo-item', {
+		props: ["text", "isComplete"],
+		template: '<span>{{text}}---{{isComplete}}</span>'
+	});
+	
+	var app4 = new Vue({
+		el: '#app4',
+		data: {
+			todo: {
+				text: 'Learn Vue',
+				isComplete: false
+			}
+		}
+	});
+	
+	Vue.component('comp', {
+		props: ["someProp"],
+		template: '<span>{{someProp}}</span>'
+	});
+	var app5 = new Vue({
+		el: '#app5',
+	});
+	
+	//如果vue不是开发构建版本，则没有抛出任何警告信息
+	Vue.component('my-exp', {
+		props: {
+			num: Number,
+			username: {
+				type: String,
+				required: true
+			},
+			msgObj: {
+				type: Object,
+				default: function() {
+					return {message: 'I am obj'}
+				}
+			}
+		},
+		template: '<span>{{num}}---{{username}}---{{msgObj.message}}</span>'
+	});
+	
+	var app6 = new Vue({
+		el: '#app6',
+		data: {
+			nums: 'bbd',
+			userName: 321,
+			mymsg: {
+				message: 'i am a tester'
+			}
+		}
+	});
+	
+	//非prop属性
+	Vue.component('bs-date-input', {
+		template: '<input type="date" class="form-control">'
+	});
+	
+	var app7 = new Vue({
+		el: '#app7',
+	});
+</script>
