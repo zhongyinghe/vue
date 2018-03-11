@@ -1,0 +1,138 @@
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<div id="app1">
+	<my-component></my-component>
+	<todo-item
+		v-for="item in groceryList"
+		v-bind:todo="item"
+		v-bind:key="item.id">
+	</todo-item>
+</div>
+
+<div id="app2">
+	<my-component></my-component>
+	<todo-item
+		v-for="item2 in items"
+		v-bind:todo="item2"
+		v-bind:key="item2.id">
+	</todo-item>
+</div>
+
+<div id="app3">
+	<my-com></my-com>
+</div>
+
+<div id="app4">
+	<table>
+		<tr
+			is="my-row"
+			v-for="gd in gds"
+			v-bind:gd="gd"
+			v-bind:key="gd.id">		
+		</tr>
+	</table>
+</div>
+
+<div id="app5">
+	<my-foo></my-foo>
+</div>
+
+<div id="app6">
+	<simple-counter></simple-counter>
+	<simple-counter></simple-counter>
+	<simple-counter></simple-counter>
+</div>
+
+<script type="text/javascript">
+	//注册全局组件
+	Vue.component('my-component', {
+		template: '<div>A custom component!</div>'
+	});
+	
+	Vue.component('todo-item', {
+		props:['todo'],
+		template: '<li>{{todo.text}}</li>',
+	});
+	
+	
+	var app1 = new Vue({
+		el: '#app1',
+		data: {
+			groceryList: [
+				{id:0, text:'蔬菜'},
+				{id:1, text:'奶酪'},
+				{id:2, text:'煎饼'},
+			]
+		}
+	});
+	
+	var app2 = new Vue({
+		el: '#app2',
+		data: {
+			items: [
+				{id:0, text:'苹果'},
+				{id:1, text:'葡萄'},
+				{id:2, text:'雪梨'},
+			]
+		}
+	});
+	
+	//局部组件注册
+	var child = {
+		template: '<div>A custom component for local!</div>'
+	}
+	
+	var app3 = new Vue({
+		el: '#app3',
+		components: {
+			'my-com': child
+		}
+	});
+	
+	//全局组件
+	Vue.component('my-row', {
+		props:['gd'],
+		template: '<tr><td>{{gd.id}}</td><td>{{gd.name}}</td></tr>'
+	});
+	
+	var app4 = new Vue({
+		el: '#app4',
+		data: {
+			gds: [
+				{id: 1, name: '笔记本'},
+				{id: 2, name: '台式机'},
+				{id: 3, name: '键盘'},
+				{id: 4, name: '鼠标'},
+				{id: 5, name: '耳塞'},
+			]
+		}
+	});
+	
+	//全局组件 
+	Vue.component('my-foo', {
+		template: '<span>{{message}}</span>',
+		data: function() {
+			return {
+				message: 'hello, world'
+			}
+		}
+	});
+	
+	var app5 = new Vue({
+		el: '#app5'
+	});
+	
+	var data = {counter: 0}
+	Vue.component('simple-counter', {
+		 template: '<button v-on:click="counter += 1">{{ counter }}</button>',
+		 data: function() {
+			//return data;
+			return {
+				counter: 0
+			}
+		 }
+	});
+	
+	var app6 = new Vue({
+		el: '#app6'
+	});
+</script>
