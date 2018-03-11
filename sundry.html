@@ -1,0 +1,194 @@
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<!--编写可复用组件-->
+<div id="app1">
+	<my-cpnt
+		:foo="baz"
+		:bar="qux"
+		@event-a="doThis"
+		@event-b="doThat">
+		<p slot="news">标题:组件综合实验</p>
+		<p slot="main">props、event和slot的综合应用示例</p>
+	</my-cpnt>
+</div>
+
+<!--子组件索引-->
+<div id="app2">
+	<user-profile ref="profile"></user-profile>
+	<button v-on:click="showChildData">显示子组件的数据</button>
+</div>
+
+<!--组件命名约定-->
+<div id="app3">
+	<ke-ca-co></ke-ca-co>
+	<ca-ca-co></ca-ca-co>
+	<pa-ca-co><pa-ca-co>
+</div>
+
+<!--递归组件-->
+<div id="app4">
+	<stack-overflow :num="0"></stack-overflow>
+</div>
+
+<!--组件之间的循环引用-->
+<div id="app5">
+	<tree-folder :folder="files"></tree-folder>
+</div>
+
+<!--对低开销的静态组件使用v-once-->
+<div id="app6">
+	<terms-of-service></terms-of-service>
+</div>
+
+<script type="text/javascript">
+	//编写可复用组件
+	Vue.component('my-cpnt', {
+		template: '<div>\
+		<h1>我是子组件标题</h1>\
+		<p>我是综合应用子组件的内容!</p>\
+		<slot name="news"></slot>\
+		<slot name="main"></slot>\
+		<button v-on:click="send1">{{foo}}</button>\
+		<button v-on:click="send2">{{bar}}</button>\
+		</div>',
+		props: ["foo", "bar"],
+		methods: {
+			send1: function() {
+				alert('123654');
+				this.$emit('event-a');
+			},
+			send2: function() {
+				alert('abcefg');
+				this.$emit("event-b");
+			}
+		}
+	});
+	
+	var app1 = new Vue({
+		el: '#app1',
+		data: {
+			baz: "触发event-a事件",
+			qux: "触发event-b事件"
+		},
+		methods: {
+			doThis: function() {
+				alert('触发了event-a执行了doThis函数');
+			},
+			doThat: function() {
+				alert('触发了event-b执行了doThat函数');
+			}
+		}
+	});
+	
+	//子组件索引
+	Vue.component('user-profile', {
+		template: '<p>{{msg}}</p>',
+		data: function() {
+			return {
+				msg: "我子组件数据"
+			}
+		}
+	});
+	
+	var app2 = new Vue({
+		el: '#app2',
+		methods: {
+			showChildData: function() {
+				alert(this.$refs.profile.msg)
+			}
+		}
+	});
+	
+	//组件命名约定
+	var app3 = new Vue({
+		el: '#app3',
+		components: {
+			'ke-ca-co': {
+				template: '<p>组件一</p>'
+			},
+			'caCaCo': {
+				template: '<p>组件二</p>'
+			},
+			'PaCaCo': {
+				template: '<p>组件三</p>'
+			}
+		}
+	});
+	
+	//递归组件
+	Vue.component('stack-overflow',{
+		template: '\
+			<div>\
+				<span>{{num}}</span>\
+				<stack-overflow :num="num+1" v-if="currNum"></stack-overflow>\
+			</div>\
+		',
+		props: ["num"],
+		name: 'stack-overflow',
+		computed: {
+			currNum: function() {
+				return this.num < 10;
+			}
+		}
+	});
+	
+	var app4 = new Vue({
+		el: '#app4'
+	});
+	
+	//组件之间的循环引用
+	Vue.component('tree-folder', {
+		props: ["folder"],
+		template:'\
+			<p>\
+				<span>{{folder.name}}</span>\
+				<tree-folder-contents :children="folder.children"></tree-folder-contents>\
+		'
+	});
+	
+	Vue.component('tree-folder-contents', {
+		props: ["children"],
+		template: '\
+			<ul>\
+				<li v-for="child in children">\
+					<tree-folder v-if="child.children" :folder="child"></tree-folder>\
+					<span v-else>{{child.name}}</span>\
+				</li>\
+			</ul>\
+		'
+	});
+	
+	var app5 = new Vue({
+		el: '#app5',
+		data: {
+			files: {
+				name: 'vue Study',
+				children: [
+					{name:"全局", children:[]},
+					{name:"局部", children:[]},
+					{name:"props", children:[]},
+					{name:"event", children:[
+						{name: "自定义事件", children:[]},
+						{name: "表单输入组件", children:[]},
+						{name: "定制组件v-model", children:[]},
+						{name: "非父子组件通信", children:[]},
+					]},
+					{name:"slot", children:[]},
+				]
+			}
+		}
+	});
+	
+	//对低开销的静态组件使用
+	Vue.component('terms-of-service', {
+		template: '\
+			<div v-once>\
+				 <h1>Terms of Service</h1>\
+				 <p>a lot of static content</p>\
+			</div>\
+		'
+	});
+	
+	var app6 = new Vue({
+		el: '#app6'
+	});
+</script>
