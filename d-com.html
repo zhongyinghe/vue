@@ -1,0 +1,84 @@
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<!--动态组件1-->
+<div id="app1">
+	<button @click="toshow">点击让子组件显示</button>
+	<keep-alive>
+	<component v-bind:is="which_to_show"></component>
+	</keep-alive>
+</div>
+
+<!--动态组件2-->
+<div id="app2">
+	<button @click="toshow">点击让子组件显示</button>
+	<keep-alive>
+	<component v-bind:is="which_to_show"></component>
+	</keep-alive>
+</div>
+
+<script type="text/javascript">
+	//动态组件1
+	var app1 = new Vue({
+		el: '#app1',
+		data: {
+			which_to_show: "first"
+		},
+		methods: {
+			toshow: function() {
+				var arr = ["first", "second", "third", ""];
+				var index = arr.indexOf(this.which_to_show);
+				if (index < 3) {
+					this.which_to_show = arr[index + 1]
+				}else {
+					this.which_to_show = arr[0];
+				}
+			}
+		},
+		components: {
+			first: {
+				template: '<div>这里是子组件1</div>'
+			},
+			second: {
+				template: '<div>这里是子组件2</div>'
+			},
+			third: {
+				template: '<div>这里是子组件3</div>'
+			}
+		}
+	});
+	
+	//动态组件2
+	var c_first = Vue.component('first', {
+		template: '<div>这里是子组件第一个</div>'
+	});
+	
+	var c_second = Vue.component('second', {
+		template: '<div>这里是子组件第二个</div>'
+	});
+	
+	var c_third = Vue.component('third', {
+		template: '<div>这里是子组件第三个</div>'
+	});
+	
+	var app2 = new Vue({
+		el: '#app2',
+		data: {
+			which_to_show: "first"
+		},
+		methods: {
+			toshow: function() {
+				var arr = ["first", "second", "third", ""];
+				var index = arr.indexOf(this.which_to_show);
+				if (index < 3) {
+					this.which_to_show = arr[index + 1]
+				}else {
+					this.which_to_show = arr[0];
+				}
+			}
+		},
+		components: {
+			first: c_first,
+			second: c_second,
+			third: c_third
+		}
+	});
+</script>
