@@ -1,0 +1,180 @@
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<link href="https://cdn.jsdelivr.net/npm/animate.css@3.5.1" rel="stylesheet" type="text/css">
+<!--在初始渲染时过渡 appear-->
+<style type="text/css">
+	.custom-appear-class{
+		font-size: 40px;
+		color: red;
+		background: green;
+	}
+	
+	.custom-appear-active-class{
+		background: green;
+	}
+</style>
+<div id="app1">
+	<button v-on:click="show = !show">Toggle</button>
+	<transition
+		appear
+		appear-class="custom-appear-class"
+		appear-active-class="custom-appear-active-class"
+	>
+		<p v-if="show">hello</p>
+	</transition>
+</div>
+
+<!--多个元素之间切换过渡-->
+<div id="app2">
+	<button v-on:click="isEditing = !isEditing">Toggle</button>
+	<br>
+	<transition
+		name="custom-classes-transition"
+		enter-active-class="animated bounceInDown"
+		leave-active-class="animated bounceOutRight"
+	>
+		<button v-if="isEditing" key="save">
+			Save
+		</button>
+		<button v-else key="edit">
+			Edit
+		</button>
+	</transition>
+</div>
+<p>===============================================================</p>
+<div id="app3">
+	<button v-on:click="isEdit = !isEdit">Toggle</button>
+	<br>
+	<transition
+		name="custom-classes-transition"
+		enter-active-class="animated bounceInDown"
+		leave-active-class="animated bounceOutRight"
+	>
+		<button v-bind:key="isEdit">
+			{{ isEdit ? 'Save' : 'Edit' }}
+		</button>
+	</transition>
+</div>
+<p>===============================================================</p>
+<!--过渡模式-->
+<div id="app4">
+	<button v-on:click="changeVal">Toggle</button>
+	<br>
+	<transition
+		name="custom-classes-transition"
+		enter-active-class="animated bounceInDown"
+		leave-active-class="animated bounceOutRight"
+		mode="in-out"
+	>
+		<button v-bind:key="docState">
+			{{ buttonMessage }}
+		</button>
+	</transition>
+</div>
+<p>===============================================================</p>
+<!--多个组件之间过渡-->
+<div id="app5">
+	<button @click="toshow">点击让子组件显示</button>
+	<transition 
+		name="component-fade" 
+		mode="out-in"
+		enter-active-class="animated bounceInDown"
+		leave-active-class="animated bounceOutRight"
+	>
+		<keep-alive>
+		<component v-bind:is="which_to_show"></component>
+		</keep-alive>
+	</transition>
+</div>
+<script type="text/javascript">
+	//在初始渲染时过渡 appear
+	var app1 = new Vue({
+		el: '#app1',
+		data: {
+			show: true
+		}
+	});
+	
+	//多个元素之间切换过渡
+	var app2 = new Vue({
+		el: '#app2',
+		data: {
+			isEditing: true
+		}
+	});
+	
+	var app3 = new Vue({
+		el: '#app3',
+		data: {
+			isEdit: true
+		}
+	});
+	
+	//过渡模式
+	var app4 = new Vue({
+		el: '#app4',
+		data: {
+			docState: 'saved'
+		},
+		computed: {
+			buttonMessage: function() {
+				switch (this.docState) {
+					case 'saved': return 'Edit'
+					case 'edited': return 'Cancel'
+					case 'canceled': return 'Save'
+				}
+			}
+		},
+		methods: {
+			changeVal: function() {
+				switch(this.docState) {
+					case 'saved': 
+						this.docState = 'edited';
+						break;
+					case 'edited':
+						this.docState = 'canceled';
+						break;
+					case 'canceled':
+						this.docState = 'saved';
+						break;
+					default:
+						this.docState = 'canceled'
+				}
+			}
+		}
+	});
+	//多个组件之间过渡
+	var c_first = Vue.component('first', {
+		template: '<div>这里是子组件第一个</div>'
+	});
+	
+	var c_second = Vue.component('second', {
+		template: '<div>这里是子组件第二个</div>'
+	});
+	
+	var c_third = Vue.component('third', {
+		template: '<div>这里是子组件第三个</div>'
+	});
+	
+	var app5 = new Vue({
+		el: '#app5',
+		data: {
+			which_to_show: "first"
+		},
+		methods: {
+			toshow: function() {
+				var arr = ["first", "second", "third"];
+				var index = arr.indexOf(this.which_to_show);
+				if (index < 2) {
+					this.which_to_show = arr[index + 1]
+				}else {
+					this.which_to_show = arr[0];
+				}
+			}
+		},
+		components: {
+			first: c_first,
+			second: c_second,
+			third: c_third
+		}
+	});
+</script>
