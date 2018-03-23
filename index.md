@@ -15,7 +15,11 @@
 * 10.4 [slot](slot.html)
 * 10.5 [动态组件](d-com.html)
 * 10.6 [杂项](sundry.html)
-
+* 11 [过渡和动画](#)
+* 11.1 [过渡的基础知识](trans.html)
+* 11.2 [多元素和多组件之间过渡](trans2.html)
+* 11.3 [列表过渡和可复用过渡](trans3.html)
+* 11.4 [状态间的过渡](trans-state.html)
 
 ### 附件理解
 * A [实例到条件渲染的理解](understand.md)
