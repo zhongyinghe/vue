@@ -65,6 +65,11 @@ leave-to-class
   </button>
 </transition>
 ```
+```
+<transition name="component-fade" mode="out-in">
+  <component v-bind:is="view"></component>
+</transition>
+```
 
 ### 列表过渡
 1、进入和离开过渡
@@ -86,3 +91,9 @@ leave-to-class
 1、可复用过渡就是使用组件和slot结合，组件模板就是使用transition标签<br>
 
 2、动态过渡就是通过变量使过渡的进入和离开发生变化
+
+### watch观察状态进行动画
+```
+A、B变量,watch观察A,computed的内容依赖B;
+当watch观察到A变化时，主动地改变B,则computed的内容就会变化
+```
