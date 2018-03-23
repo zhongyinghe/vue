@@ -1,0 +1,165 @@
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.20.3/TweenMax.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/tween.js@16.3.4"></script>
+<script src="https://cdn.jsdelivr.net/npm/color-js@1.0.3"></script>
+<!--watch观察状态进行动画-->
+<div id="app1">
+	<input v-model.number="number" type="number" step="20">
+	<p>{{ animatedNumber }}</p>
+</div>
+
+<style type="text/css">
+.example-7-color-preview {
+	display: inline-block;
+	width: 50px;
+	height: 50px;
+}
+</style>
+<div id="app2">
+	<input
+		v-model="colorQuery"
+		v-on:keyup.enter="updateColor"
+		placeholder="Enter a color"
+	>
+	<button v-on:click="updateColor">Update</button>
+	<p>Preview:</p>
+	<span
+		v-bind:style="{ backgroundColor: tweenedCSSColor }"
+		class="example-7-color-preview"
+	>
+	</span>
+	<p>{{ tweenedCSSColor }}</p>
+</div>
+
+<!--通过组件组织过渡-->
+<div id="app3">
+	<input v-model.number="firstNumber" type="number" step="20"> +
+	<input v-model.number="secondNumber" type="number" step="20"> =
+	{{ result }}
+	<p>
+		<animated-integer v-bind:value="firstNumber"></animated-integer> +
+		<animated-integer v-bind:value="secondNumber"></animated-integer> =
+		<animated-integer v-bind:value="result"></animated-integer>
+	</p>
+</div>
+<script type="text/javascript">
+	//watch观察状态进行动画
+	var app1 = new Vue({
+		el: '#app1',
+		data: {
+			number: 0,
+			tweenedNumber: 0
+		},
+		computed: {
+			animatedNumber: function() {
+				//TweenLite.to(this.$data, 0.5, { tweenedNumber: this.number });//这个也是可以的
+				return this.tweenedNumber.toFixed(0);
+			}
+		},
+		watch: {
+			number: function(newValue) {
+				TweenLite.to(this.$data, 0.5, { tweenedNumber: newValue });
+			}
+		}
+	});
+	
+	var Color = net.brehaut.Color
+	var app2 = new Vue({
+		el: '#app2',
+		data: {
+			colorQuery: '',
+			color: {
+				red: 0,
+				green: 0,
+				blue: 0,
+				alpha: 1
+			},
+			tweenedColor: {}
+		},
+		created: function () {
+			this.tweenedColor = Object.assign({}, this.color)
+		},
+		watch: {
+			color: function () {
+				function animate () {
+					if (TWEEN.update()) {
+						requestAnimationFrame(animate)
+					}
+				}
+				
+				new TWEEN.Tween(this.tweenedColor).to(this.color, 750).start()
+				animate()
+			}
+		},
+		computed: {
+			tweenedCSSColor: function () {
+				return new Color({
+					red: this.tweenedColor.red,
+					green: this.tweenedColor.green,
+					blue: this.tweenedColor.blue,
+					alpha: this.tweenedColor.alpha
+				}).toCSS()
+			}
+		},
+		methods: {
+			updateColor: function () {
+				this.color = new Color(this.colorQuery).toRGB()
+				this.colorQuery = ''
+			}
+		}
+	});
+	
+	//通过组件组织过渡
+	Vue.component('animated-integer', {
+		template: '<span>{{ tweeningValue }}</span>',
+		props: {
+			value: {
+			  type: Number,
+			  required: true
+			}
+		},
+		data: function () {
+			return {
+				tweeningValue: 0
+			}
+		},
+		watch: {
+			value: function (newValue, oldValue) {
+				this.tween(oldValue, newValue)
+			}
+		},
+		mounted: function () {
+			this.tween(0, this.value)
+		},
+		methods: {
+			tween: function (startValue, endValue) {
+				var vm = this
+				function animate () {
+					if (TWEEN.update()) {
+						requestAnimationFrame(animate)
+					}
+				}
+
+				new TWEEN.Tween({ tweeningValue: startValue })
+					.to({ tweeningValue: endValue }, 500)
+					.onUpdate(function () {
+						vm.tweeningValue = this.tweeningValue.toFixed(0)
+					}).start();
+
+				animate()
+			}
+		}
+	});
+	var app3 = new Vue({
+		el: '#app3',
+		data: {
+			firstNumber: 20,
+			secondNumber: 40
+		},
+		computed: {
+			result: function() {
+				return this.firstNumber + this.secondNumber
+			}
+		}
+	});
+</script>
