@@ -7,6 +7,14 @@
 * 6 [条件渲染](ifShow.html)
 * 7 [列表渲染](vfor.html)
 * 8 [事件处理](event.html)
+* 9 [表单input绑定](vmodel.html)
+* 10 [组件](#)
+* 10.1 [全局组件和局部组件](component.html)
+* 10.2 [props传数据和非props属性](component2.html)
+* 10.3 [自定义事件](component3.html)
+* 10.4 [slot](slot.html)
+* 10.5 [动态组件](d-com.html)
+* 10.6 [杂项](sundry.html)
 
 
 ### 附件理解
