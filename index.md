@@ -24,3 +24,6 @@
 ### 附件理解
 * A [实例到条件渲染的理解](understand.md)
 * B [列表渲染到表单input绑定理解](understand2.md)
+* C [组件理解](component_udsd.md)
+* C.I [组件理解的图片](component.jpg)
+* D [过渡和动画](transition.md)
