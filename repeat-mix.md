@@ -4,3 +4,25 @@
 2)在合并应用时除了钩子函数是先后调用关系外，其他的如果是同键名的，则使用组件的
 3)全局mixin会影响后面创建的所有实例
 ```
+2、自定义指令
+```
+自定义指令钩子函数:
+    bind:
+    inserted:
+    update:
+    componentUpdated:
+    unbind:
+```
+```
+钩子函数参数:
+  el:
+  binding:
+    name
+    value
+    oldValue
+    expression
+    arg
+    modifiers
+  vnode
+  oldVnode
+```
