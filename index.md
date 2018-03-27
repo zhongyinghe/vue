@@ -20,10 +20,11 @@
 * 11.2 [多元素和多组件之间过渡](trans2.html)
 * 11.3 [列表过渡和可复用过渡](trans3.html)
 * 11.4 [状态间的过渡](trans-state.html)
-
+* 12 [mixin](mixin.html)
 ### 附件理解
 * A [实例到条件渲染的理解](understand.md)
 * B [列表渲染到表单input绑定理解](understand2.md)
 * C [组件理解](component_udsd.md)
 * C.I [组件理解的图片](component.jpg)
 * D [过渡和动画](transition.md)
+* E [可重复和合成](repeat-mix.md)
