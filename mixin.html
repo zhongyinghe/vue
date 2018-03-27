@@ -1,0 +1,142 @@
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<div id="app2">
+</div>
+
+<div id="app3">
+</div>
+
+<div id="app4">
+</div>
+<script type="text/javascript">
+	//1、初始应用
+	var myMixin = {
+		created: function() {
+			this.hello()
+		},
+		methods: {
+			hello: function() {
+				console.log('来自 mixin 对象的 hello！')
+			}
+		}
+	}
+	
+	var Component = Vue.extend({
+		mixins: [myMixin]
+	});
+	
+	var component = new Component();
+	
+	//2、有模板的应用
+	var tMixin = {
+		template: '<h1>hello mixin</h1>',
+		methods: {
+			hello: function() {
+				console.log("this is mixin")
+			},
+			say: function() {
+				console.log("I am mixin")
+			}
+		}
+	}
+	
+	var Component = Vue.extend({
+		mixins: [tMixin],
+		methods: {
+			lsit: function() {
+				console.log("I am lsit")
+			},
+			say: function() {
+				console.log("I am mixin say")
+			}
+		}
+	});
+	
+	var newcom = new Component().$mount("#app2")
+	newcom.hello()
+	newcom.lsit()
+	newcom.say()
+	
+	//3、与Vue实例结合使用
+	var app3 = new Vue({
+		el: '#app3',
+		mixins: [tMixin]
+	});
+	
+	//4、合并应用-属性的使用组件的
+	var mmMixin = {
+		data: function() {
+			return {
+				message: 'hello',
+				foo: 'abc'
+			}
+		}
+	}
+	
+	new Vue({
+		el: '#app4',
+		mixins: [mmMixin],
+		data: {
+			message: "goodbye",
+			bar: "def"
+		},
+		created: function() {
+			console.log(this.message, this.foo, this.bar)
+		}
+	});
+	
+	//5、合并应用-钩子函数，会先调用mixin的后调用组件的
+	var xMixin = {
+		created: function() {
+			console.log('mixin 对象的钩子函数先被调用')
+		}
+	}
+	
+	new Vue({
+		mixins: [xMixin],
+		created: function() {
+			console.log('组件的钩子函数后被调用')
+		}
+	})
+	
+	//6、合并应用-非钩子函数,methods中的函数，如果有键值相同的，则使用组件的
+	var yMixin = {
+		methods: {
+			foo: function () {
+				console.log('foo')
+			},
+			conflicting: function () {
+				console.log('from mixin')
+			}
+		}
+	}
+	
+	var app6 = new Vue({
+		mixins: [yMixin],
+		methods: {
+			bar: function () {
+				console.log('bar')
+			},
+			conflicting: function () {
+				console.log('from self')
+			}
+		}
+	});
+	
+	app6.foo()
+	app6.bar()
+	app6.conflicting()
+	
+	//7、全局mixin,会影响到以后创建的每个实例
+	Vue.mixin({
+		created: function() {
+			var myOption = this.$options.myOption
+			if (myOption) {
+				console.log(myOption)
+			}
+		}	
+	})
+	
+	new Vue({
+		myOption: "hello 全局mixin"
+	})
+</script>
