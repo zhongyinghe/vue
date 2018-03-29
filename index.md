@@ -22,6 +22,7 @@
 * 11.4 [状态间的过渡](trans-state.html)
 * 12 [mixin](mixin.html)
 * 13 [自定义指令](directive.html)
+* 14 [render的使用](render.html)
 ### 附件理解
 * A [实例到条件渲染的理解](understand.md)
 * B [列表渲染到表单input绑定理解](understand2.md)
