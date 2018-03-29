@@ -1,0 +1,381 @@
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/velocity/1.2.3/velocity.min.js"></script>
+<!--render入门-->
+<div id="app1">
+	<anchored-heading :level="1">
+		<a name="hello-world" href="#hello-world">Hello World</a>
+	</anchored-heading>
+</div>
+
+<p>===============================================================</p>
+<!--完整示例-->
+<div id="app2">
+	<anchored-heading2 :level="1">
+		Hello World-111
+	</anchored-heading2>
+</div>
+
+<p>===============================================================</p>
+<!--VNode必须唯一-->
+<div id="app3">
+	<my-test></my-test>
+</div>
+
+<p>===============================================================</p>
+<!--使用render函数代替v-if和v-for-->
+<div id="app4">
+	<my-for :items="items"></my-for>
+</div>
+
+<p>===============================================================</p>
+<!--使用render函数代替v-model-->
+<div id="app5">
+	<my-input v-model="val"></my-input>
+</div>
+
+<p>===============================================================</p>
+<!--slots的作用域插槽-->
+<div id="app6">
+	<my-st :message="msg">
+		<template slot-scope="props">
+			<span>{{ props.text }}</span>
+		</template>
+	</my-st>
+</div>
+
+<p>===============================================================</p>
+<!--slots的作用域插槽2-->
+<div id="app7">
+	<my-sc :message="msg">
+		<template slot-scope="props">
+			
+		</template>
+	</my-sc>
+</div>
+<p>===============================================================</p>
+<!--函数式组件-->
+<div id="app8">
+	<smart-list :items="items"></smart-list>
+</div>
+
+<p>===============================================================</p>
+
+<!--函数式组件2-->
+<div id="app9">
+	<input v-model="query">
+	<my-transition :query="query" :list="list">
+		<li v-for="(item, index) in computedList"
+			:key="item.msg"
+			:data-index="index">
+			{{item.msg}}
+	 </my-transition>
+</div>
+<p>===============================================================</p>
+<!--向子元素或子组件传递属性和事件-->
+<div id="app10">
+	<my-functional-button v-on:click="showMsg" :message="msg">{{txt}}</my-functional-button>
+</div>
+<script type="text/javascript">
+	//1、render入门 
+	Vue.component('anchored-heading', {
+		render: function(createElement) {
+			return createElement(
+				'h' + this.level,
+				this.$slots.default
+			)
+		},
+		props: {
+			level: {
+				type: Number,
+				required: true
+			}
+		}
+	});
+	
+	var app1 = new Vue({
+		el: '#app1'
+	});
+	
+	//2、完整示例
+	var getChildrenTextContent = function (children) {
+		return children.map(function (node) {
+			return node.children
+			  ? getChildrenTextContent(node.children)
+			  : node.text
+		}).join('')
+	}
+	
+	Vue.component('anchored-heading2', {
+		render: function (createElement) {
+			// create kebabCase id
+			var headingId = getChildrenTextContent(this.$slots.default)
+			.toLowerCase()
+			.replace(/\W+/g, '-')
+			.replace(/(^\-|\-$)/g, '')
+			console.log(headingId)
+			return createElement(
+				'h' + this.level,
+				[
+					createElement('a', {   //这里不需要return,因为createElement()直接作为参数
+						attrs: {
+							name: headingId,
+							href: '#' + headingId
+						},
+						class: {
+							foo: true,
+							bar: true
+						}
+					}, this.$slots.default)
+				]
+			)
+		},
+		props: {
+			level: {
+				type: Number,
+				required: true
+			}
+		}
+	})
+	
+	var app2 = new Vue({
+		el: '#app2'
+	});
+	
+	//3、VNode必须唯一
+	Vue.component('my-test', {
+		render: function(createElement) {
+			/*var myParagraphVNode = createElement('p', 'hi,pp')
+			return createElement('div',[
+				myParagraphVNode,myParagraphVNode,myParagraphVNode,myParagraphVNode,myParagraphVNode//是有效的,看来底层它已改动了
+			])*/
+			return createElement('div',
+				Array.apply(null, { length: 20 }).map(function () {
+					return createElement('p', 'hi')
+				})
+			)
+		}
+	});
+	
+	var app3 = new Vue({
+		el: '#app3'
+	});
+	
+	//4、使用render函数代替v-if和v-for
+	Vue.component('my-for', {
+		props: ['items'],
+		render: function(createElement) {
+			if (this.items.length) {
+				return createElement('ul', this.items.map(function(item){
+					return createElement('li', item.text)  //要return,因为它是循环创建
+				}))
+			} else {
+				return createElement('p', 'No items found.')
+			}
+		}
+	});
+	
+	var app4 = new Vue({
+		el: '#app4',
+		data: {
+			items: [
+				{id: 1, text: 'language'},
+				{id: 2, text: 'hello'},
+				{id: 3, text: 'world'},
+				{id: 4, text: 'golang'},
+				{id: 5, text: 'php'},
+				{id: 6, text: 'c'},
+				{id: 7, text: 'c++'},
+			]
+		}
+	})
+	
+	//5、使用render函数代替v-model
+	Vue.component('my-input', {
+		props: ['value'],
+		render: function(createElement) {
+			var self = this 
+			return createElement('input', {
+				domProps: {
+					value: self.value
+				},
+				on: {
+					input: function(event) {
+						self.$emit('input', event.target.value)
+					}
+				}
+			})
+		}
+	});
+	
+	var app5 = new Vue({
+		el: '#app5',
+		data: {
+			val: ''
+		}
+	})
+	
+	//6、slots的作用域插槽
+	Vue.component('my-st', {
+		props: ['message'],
+		render: function(createElement) {
+			console.log(this.message)
+			return createElement('div',[
+				 this.$scopedSlots.default({
+					text: this.message
+				})
+			])
+		}
+	})
+	
+	var app6 = new Vue({
+		el: '#app6',
+		data: {
+			msg: "hello world"
+		}
+	})
+	
+	//7、slots的作用域插槽2--还无法理解
+	Vue.component('my-sc', {
+		props: ['message'],
+		render: function (createElement) {
+			return createElement('div', [
+				this.$scopedSlots.default({
+					text: this.message
+				}),
+				createElement('div', {
+					scopedSlots: {
+						default: function (props) {
+							return createElement('span', props.text)
+						}
+					}
+				})
+			])
+		}
+	})
+	
+	var app7 = new Vue({
+		el: '#app7',
+		data: {
+			msg: 'hello, scoped'
+		}
+	})
+	
+	//8、函数式组件
+	var EmptyList = {template: '<p>Empty list</p>'};
+	var TableList = 'ul'
+	var UnorderedList = 'ul'
+	Vue.component('smart-list',{
+		functional: true,
+		render: function(createElement, context) {
+			function appropriateListComp() {
+				 var items = context.props.items;
+				 if (items.length === 0) return EmptyList;
+				 if (typeof items[0] === 'object') return TableList;
+				 return UnorderedList
+			}
+			
+			return createElement(appropriateListComp(),
+				Array.apply(null, {length: context.props.items.length}).map(function (value, index) {
+					return createElement('li',context.props.items[index].name)
+				})
+			)
+		},
+		props: {
+			items: {
+				type: Array,
+				required: true
+			},
+			isOrdered: Boolean
+		}
+	})
+	
+	var app8 = new Vue({
+		el: '#app8',
+		data: {
+			items:[
+				{id:0, name: 'a'},
+				{id:1, name: 'b'},
+				{id:2, name: 'c'},
+				{id:3, name: 'd'},
+			]
+		}
+	})
+	
+	//9、函数式组件二
+	 Vue.component('my-transition', {
+        functional:true,
+        render:function (h, ctx) {
+            var data = {
+                props:{
+                    tag:'ul',
+                    css:false
+                },
+                on:{
+                    beforeEnter:function (el) {
+                        el.style.opacity = 0
+                        el.style.height = 0
+                    },
+                    enter:function (el, done) {
+                        var delay = el.dataset.index * 150
+                        setTimeout(function () {
+                            Velocity(el, {opacity:1, height:'1.6em'},{complete:done})
+                        }, delay)
+                    },
+                    leave:function (el, done) {
+                        var delay = el.dataset.index * 150
+                        setTimeout(function () {
+                            Velocity(el, {opacity:0, height:0}, {complete:done})
+                        }, delay)
+                    }
+                }
+            }
+            return h('transition-group', data, ctx.children)
+        },
+        props:['query', 'list']
+    })
+
+    var app9 = new Vue({
+        el:'#app9',
+        data:{
+            query:'',
+            list:[
+                {msg:'Bruce Lee'},
+                {msg:'Jackie Chan'},
+                {msg:'Chuck Norris'},
+                {msg:'Jet Li'},
+                {msg:'Kung Furry'},
+                {msg:'Chain Zhang'},
+                {msg:'Iris Zhao'},
+            ]
+        },
+        computed:{
+            computedList:function () {
+                var vm = this
+                return this.list.filter(function (item) {
+                    return item.msg.toLowerCase().indexOf(vm.query.toLowerCase()) !== -1
+                })
+            }
+        },
+    })
+	
+	//10、向子元素或子组件传递属性和事件
+	Vue.component('my-functional-button', {
+		functional: true,
+		render: function(createElement, context) {
+			return createElement('button', context.data, context.children)
+		}
+	})
+	
+	var app10 = new Vue({
+		el: '#app10',
+		data: {
+			txt: 'hello',
+			msg: 'hello world'
+		},
+		methods: {
+			showMsg: function() {
+				alert('123')
+			}
+		}
+	})
+</script>
