@@ -1,0 +1,48 @@
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<!--局部过滤器-->
+<div id="app1">
+	<input v-model="message">
+	<br>
+	<span>{{message | capitalize}}</span>
+</div>
+
+<p>===============================================================</p>
+
+<!--全局过滤器-->
+<div id="app2">
+	<input v-model="msg">
+	<br>
+	<span>{{msg | cap('go')}}</span>
+</div>
+
+<script type="text/javascript">
+	//局部过滤器
+	var app1 = new Vue({
+		el: '#app1',
+		data: {
+			message: 'abc'
+		},
+		filters: {
+			capitalize: function(value) {
+				if (!value) return ''
+				
+				value = value.toString()
+				return value.charAt(0).toUpperCase() + value.slice(1)
+			}
+		}
+	})
+	
+	//全局过滤器
+	Vue.filter('cap', function(value, end){
+		if (!value) return ''		
+		value = value.toString()
+		return value.charAt(0).toUpperCase() + value.slice(1) + ' ' + end
+	})
+	
+	var app2 = new Vue({
+		el: '#app2',
+		data: {
+			msg: ''
+		}
+	})
+</script>
