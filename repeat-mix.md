@@ -56,7 +56,7 @@ filters: {
   }
 }
 ```
-2)全局过滤器
+2)全局过滤器(类似于php的smart模板使用)
 ```
 Vue.filter('cap', function(value, end){
     if (!value) return ''		
