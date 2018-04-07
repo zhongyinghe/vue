@@ -39,12 +39,12 @@ v-for遍历对象:value、key、index
 ### 三、表单input绑定
 1、基础用法
 ```
-数据绑定 => value双向绑定在v-model中的xxx,而xxx是data{}中的值;
+数据绑定 => value双向绑定在v-model中的xxx,而xxx是data{}中的值;相当于name
 ```
 
 2、与value属性绑定
 ```
-v-bind:value="xxx";而xxx是data的变量
+v-bind:value="xxx";而xxx是data的变量;相当于value
 ```
 3、修饰符
 ```
