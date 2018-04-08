@@ -113,6 +113,15 @@
 	</div>
 </div>
 
+<br>
+-------------------------------------------------
+<br>
+<!--组件化checkbox-->
+<div id="app4">
+	<my-checkbox v-bind:vals="vals" v-model="rs"></my-checkbox>
+	<span>结果是:{{rs}}</span>
+</div>
+
 <script type="text/javascript">
 	var app1 = new Vue({
 		el: '#app1',
@@ -151,6 +160,56 @@
 			msg: '',
 			age: '',
 			txt: '',
+		}
+	});
+	
+	//组件化checkbox
+	Vue.component('my-checkbox',{
+		model: {
+			prop: 'checked',
+			event: 'balabala'
+		},
+		props: ['vals', 'checked', 'value'],
+		template:'<div>\
+			<template v-for="item in vals">\
+				<input type="checkbox" v-bind:id="item.val" v-bind:value="item.val" v-bind:checked="value"  v-on:change="updateValue($event.target.checked,$event.target.value)">\
+				<label v-bind:for="item.text">{{item.text}}</label>\
+			</template>\
+		</div>\
+		',
+		data:function() {
+			return {
+				result: []
+			}
+		},
+		methods: {
+			updateValue: function(isCheck, value) {
+				var index = this.result.indexOf(value)
+				if (isCheck && index == -1) {
+					this.result.push(value)
+				}else if(!isCheck && index > -1) {
+					this.result.splice(index, 1)
+				}
+				/*if (isCheck) {
+					this.result.push(value)
+				}else {
+					this.result.splice(index, 1)
+				}*/
+				//console.log(this.result);
+				this.$emit('balabala', this.result)
+			}
+		}
+	});
+	
+	var app4 = new Vue({
+		el: '#app4',
+		data: {
+			vals: [
+				{text: 'jack', val: 'jack'},
+				{text: 'john', val: 'john'},
+				{text: 'mike', val: 'mike'},
+			],
+			rs: []
 		}
 	});
 </script>
