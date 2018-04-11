@@ -122,6 +122,24 @@
 	<span>结果是:{{rs}}</span>
 </div>
 
+<br>
+-------------------------------------------------
+<br>
+<!--组件化radio-->
+<div id="app5">
+	<my-radio v-model="rd" :items="items" v-bind:name="name"></my-radio>
+	<span>选择的结果是:{{rd}}</span>
+</div>
+
+<br>
+-------------------------------------------------
+<br>
+<!--组件化select-->
+<div id="app6">
+	<my-select v-model="webm" v-bind:options="options"></my-select>
+	<br>
+	<span>选择的结果是:{{webm}}</span>
+</div>
 <script type="text/javascript">
 	var app1 = new Vue({
 		el: '#app1',
@@ -212,4 +230,60 @@
 			rs: []
 		}
 	});
+	
+	//组件化radio,在这样的自定义组件中一定要自定义事件，否则v-model变量获取不到值(checkbox,select都一样)。
+	//而radio一定要增加一个name属性，让其都同名，否则无法进行单项
+	Vue.component('my-radio', {
+		model: {
+			event: 'babala'
+		},
+		props: ['items','name'],
+		template: `
+			<div>
+				<template v-for="item in items">
+					<input type="radio" :id="item.val" :value="item.val" v-bind:name="name" v-on:change="$emit('babala', $event.target.value)">
+					<label>{{item.text}}</label>
+				</template>
+			</div>
+		`
+	});
+	
+	var app5 = new Vue({
+		el: '#app5',
+		data: {
+			items: [
+				{text: 'jack', val: 'jack'},
+				{text: 'john', val: 'john'},
+				{text: 'mike', val: 'mike'},
+			],
+			rd: '',
+			name: 'abbs'
+		}
+	});
+	
+	//组件化select
+	Vue.component('my-select', {
+		model: {
+			event: 'bibizhu'
+		},
+		props: ['options'],
+		template:`
+			<select v-on:change="$emit('bibizhu', $event.target.value)">
+				<option value="">请选择其中一项</option>
+				<option v-for="option in options" v-bind:value="option.value">{{ option.text }}</option>
+			</select>
+		`,
+	});
+	
+	var app6 = new Vue({
+		el: '#app6',
+		data: {
+			options: [
+				{ text: 'mall', value: 'A' },
+				{ text: 'image', value: 'B' },
+				{ text: 'bbs', value: 'C' }
+			],
+			webm: ''
+		}
+	})
 </script>
