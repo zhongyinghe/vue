@@ -125,6 +125,9 @@
 		},
 		watch: {
 			value: function (newValue, oldValue) {
+				if (!newValue) {
+					newValue = 0
+				}
 				this.tween(oldValue, newValue)
 			}
 		},
