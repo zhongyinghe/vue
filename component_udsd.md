@@ -6,8 +6,8 @@
 
 3、子组件模板引用父组件数据
 ```
-静态props
-动态props
+静态props 如:<blog-post title="My journey with Vue"></blog-post>
+动态props 如:<blog-post :title="param"></blog-post> //param具体内容依赖传值
 ```
 4、父组件监听子组件触发事件
 ```
