@@ -31,3 +31,6 @@
 * C.I [组件理解的图片](component.jpg)
 * D [过渡和动画](transition.md)
 * E [可重复和合成](repeat-mix.md)
+
+### 工具
+* [vscode配置](vscode配置.md)
